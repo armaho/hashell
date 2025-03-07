@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +11,7 @@
 #define EXIT_CMD "exit"
 #define PATH_CMD "path"
 #define CD_CMD "cd"
+#define REDIR ">"
 
 int extract_args(char ***args, size_t *arg_len, char *command) {
     *args = malloc(MAX_ARGS * sizeof(char *));
@@ -36,6 +38,14 @@ int extract_args(char ***args, size_t *arg_len, char *command) {
     return 0;
 }
 
+void redirect(char *file) {
+    close(STDOUT_FILENO);
+    if (open(file, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU) == -1) {
+        printf("cannot open '%s'. (err: %s)\n", file, strerror(errno));
+        exit(1);
+    }
+}
+
 void parse(char *command) {
     char **args = NULL;
     size_t arg_len = 0;
@@ -44,8 +54,6 @@ void parse(char *command) {
         printf("execution failed, cannot read args.\n");
         return;
     }
-
-    printf("arglen: %zu\n", arg_len);
 
     if (args[0] == NULL) {
         return;
@@ -85,6 +93,20 @@ void parse(char *command) {
     if (pid == -1) {
         printf("execution failed, cannot fork. errno: %d\n", errno);
     } else if (pid == 0) {
+        for (int i = 0; i < arg_len; i++) {
+            if (strcmp(args[i], REDIR) != 0) {
+                continue;
+            }
+
+            if (args[i + 1] == NULL) {
+                printf("provide a file for redirection\n");
+                exit(1);
+            }
+
+            redirect(args[i + 1]);
+            args[i] = NULL;
+        }
+
         int e = execv(exe, args);
         if (e == -1) {
             printf("execution failed. errno: %d\n", errno);
