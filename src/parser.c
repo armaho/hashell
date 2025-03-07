@@ -32,7 +32,7 @@ int extract_args(char ***args, size_t *arg_len, char *command) {
     }
     (*args)[i] = NULL;
 
-    arg_len = &i;
+    *arg_len = i;
     return 0;
 }
 
@@ -44,6 +44,8 @@ void parse(char *command) {
         printf("execution failed, cannot read args.\n");
         return;
     }
+
+    printf("arglen: %zu\n", arg_len);
 
     if (args[0] == NULL) {
         return;
