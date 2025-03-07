@@ -11,12 +11,12 @@
 #define PATH_CMD "path"
 #define CD_CMD "cd"
 
-char **extract_args(char *command) {
-    char **args = malloc(MAX_ARGS * sizeof(char *));
+int extract_args(char ***args, size_t *arg_len, char *command) {
+    *args = malloc(MAX_ARGS * sizeof(char *));
     if (args == NULL) {
         printf("cannot extract args, memory allocation failed. errno: %d\n",
                errno);
-        return NULL;
+        return -1;
     }
 
     char *arg;
@@ -25,18 +25,25 @@ char **extract_args(char *command) {
     while ((arg = strsep(&command, " ")) != NULL) {
         if (MAX_ARGS - 1 <= i) {
             printf("cannot extract args, too many arguments.\n");
-            return NULL;
+            return -1;
         }
-        args[i] = arg;
+        (*args)[i] = arg;
         i++;
     }
-    args[i] = NULL;
+    (*args)[i] = NULL;
 
-    return args;
+    arg_len = &i;
+    return 0;
 }
 
 void parse(char *command) {
-    char **args = extract_args(command);
+    char **args = NULL;
+    size_t arg_len = 0;
+
+    if (extract_args(&args, &arg_len, command) == -1) {
+        printf("execution failed, cannot read args.\n");
+        return;
+    }
 
     if (args[0] == NULL) {
         return;
@@ -76,11 +83,6 @@ void parse(char *command) {
     if (pid == -1) {
         printf("execution failed, cannot fork. errno: %d\n", errno);
     } else if (pid == 0) {
-        if (args == NULL) {
-            printf("execution failed, cannot read args.\n");
-            exit(1);
-        }
-
         int e = execv(exe, args);
         if (e == -1) {
             printf("execution failed. errno: %d\n", errno);
