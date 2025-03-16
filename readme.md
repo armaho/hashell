@@ -1,6 +1,6 @@
-# Wish Shell
+# HaShell
 
-Wish shell is a simple but lowkey capable shell I built to learn about system calls and processes.
+HaShell is a simple but lowkey capable shell I built to learn about system calls and processes.
 
 ## Commands
 
@@ -10,20 +10,20 @@ Wish shell is a simple but lowkey capable shell I built to learn about system ca
 
 ## Usage
 
-When you execute wish, a prompt like this pops up:
+When you execute HaShell, a prompt like this pops up:
 
 ```
-wish {current-directory}>
+HaShell {current-directory}>
 ```
 
 From this moment, you can command with to do run anything:
 
 ```
-wish {current-directory}> ls -a
+HaShell {current-directory}> ls -a
 ```
 
-You can redirect the output of wish using `>`:
+You can redirect the output of HaShell using `>`:
 
 ```
-wish {current-directory}> ls -a > out.o
+HaShell {current-directory}> ls -a > out.o
 ```
