@@ -1,1 +1,4 @@
+# build directories
+
 cmake-build-debug/
+build/
