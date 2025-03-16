@@ -56,6 +56,14 @@ char **get_paths() {
 
     char *path_file_path = get_path_file_path();
     FILE *fp = fopen(path_file_path, "r");
+    if (fp == NULL) {
+        printf("cannot read %s (err: %s)\n", path_file_path, strerror(errno));
+
+        free(paths);
+        free(path_file_path);
+
+        return NULL;
+    }
 
     while (i < MAX_PATH_CNT) {
         size_t cap = 0;
@@ -96,6 +104,11 @@ char *find_exe(char *name) {
     size_t name_len = strlen(name);
     char **paths = get_paths();
 
+    if (paths == NULL) {
+        printf("cannot find paths.\n");
+        return NULL;
+    }
+
     for (int i = 0; paths[i] != NULL; i++) {
         size_t len = strlen(paths[i]);
 
@@ -110,9 +123,12 @@ char *find_exe(char *name) {
         strcat(exe_path, name);
 
         if (access(exe_path, X_OK) == 0) {
+            free(paths);
+
             return exe_path;
         }
     }
 
+    free(paths);
     return NULL;
 }

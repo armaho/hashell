@@ -20,6 +20,7 @@ int main(int argc, char* argv[argc + 1]) {
 
         if (getline(&command, &command_capp, stdin) == -1) {
             printf("error reading command\n");
+            continue;
         }
 
         size_t len = strlen(command);
