@@ -27,3 +27,9 @@ You can redirect the output of HaShell using `>`:
 ```
 HaShell {current-directory}> ls -a > out.o
 ```
+
+HaShell also supports piping, you can pipe multiple commands using `|`:
+
+```
+HaShell {current-directory}> ls -a | sort
+```
