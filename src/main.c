@@ -13,7 +13,7 @@ int main(int argc, char* argv[argc + 1]) {
             printf("getcwd() error\n");
         }
 
-        printf("wish %s> ", cwd);
+        printf("HaShell %s> ", cwd);
 
         char* command = NULL;
         size_t command_capp = 0;

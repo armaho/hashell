@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #define MAX_PATH_CNT 100
-#define PATH_FILE_NAME ".wishpath"
+#define PATH_FILE_NAME ".hashellpath"
 
 static char *get_path_file_path() {
     char *home = getenv("HOME");
